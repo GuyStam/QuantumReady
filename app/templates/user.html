@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - User Route{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Welcome, {{ name }}!</h1>
+        <p class="page-subtitle">
+            Dynamic Flask route rendered with Jinja2.
+        </p>
+    </div>
+</div>
+
+<div class="card narrow-card">
+    <div class="card-body">
+        <div class="eyebrow">DYNAMIC ROUTE</div>
+        <h2>/user/&lt;name&gt;</h2>
+        <p>
+            The value <strong>{{ name }}</strong> was received from the URL and inserted
+            dynamically into this HTML template using Jinja2.
+        </p>
+
+        <div class="actions">
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Back to Home</a>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Open Dashboard</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

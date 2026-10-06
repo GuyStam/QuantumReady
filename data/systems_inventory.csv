@@ -1,0 +1,8 @@
+﻿system_id,system_name,system_type,environment,criticality,owner_id,owner_name,team,email
+1,Edge Traffic Gateway,Edge Service,Production,High,1,Dana Levi,Edge Security,dana.levi@example.org
+2,Customer API Platform,API Service,Production,High,2,Noam Cohen,API Security,noam.cohen@example.org
+3,Internal Admin Portal,Web Application,Production,Medium,3,Maya Ron,Corporate IT,maya.ron@example.org
+4,Origin Connectivity Service,Network Service,Production,High,4,Amit Bar,Network Security,amit.bar@example.org
+5,Software Signing Pipeline,CI/CD Service,Production,High,5,Lior Tal,Platform Security,lior.tal@example.org
+6,Analytics Reporting Service,Data Service,Production,Medium,6,Yael Shani,Data Platform,yael.shani@example.org
+7,PQC Pilot Environment,Pilot Service,Staging,Medium,1,Dana Levi,Edge Security,dana.levi@example.org

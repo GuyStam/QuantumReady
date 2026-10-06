@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - Import Data{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Import Organizational Data</h1>
+        <p class="page-subtitle">
+            Upload the three simulated organizational exports and rebuild the consolidated inventory.
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.sources') }}" class="btn btn-secondary">View Data Sources</a>
+</div>
+
+<div class="notice notice-warning">
+    <strong>Full Refresh:</strong>
+    Importing a new organizational dataset replaces the current inventory,
+    including manually added assets. The uploaded files are validated before the refresh is applied.
+</div>
+
+{% if error %}
+<div class="notice notice-warning">
+    <strong>Import error:</strong> {{ error }}
+</div>
+{% endif %}
+
+{% if success %}
+<div class="notice notice-success">
+    {{ success }}
+</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-section">
+            <div class="source-number">01</div>
+            <h2>IT / CMDB Inventory</h2>
+            <p class="text-muted">Systems, environment, business criticality and ownership metadata.</p>
+
+            <div class="form-group full">
+                <label for="systems_file">systems_inventory.csv</label>
+                <input id="systems_file" type="file" name="systems_file" accept=".csv" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="source-number">02</div>
+            <h2>Cryptographic Inventory</h2>
+            <p class="text-muted">Cryptographic assets, algorithms, protocols, key sizes and exposure.</p>
+
+            <div class="form-group full">
+                <label for="crypto_file">crypto_inventory.csv</label>
+                <input id="crypto_file" type="file" name="crypto_file" accept=".csv" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="source-number">03</div>
+            <h2>PKI / Certificate Inventory</h2>
+            <p class="text-muted">Certificate issuer, serial number, validity and expiration metadata.</p>
+
+            <div class="form-group full">
+                <label for="certificates_file">certificates_inventory.csv</label>
+                <input id="certificates_file" type="file" name="certificates_file" accept=".csv" required>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Import and Analyze Data</button>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

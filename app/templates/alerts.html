@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - Alerts{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Alerts</h1>
+        <p class="page-subtitle">
+            Operational signals that require attention during the PQC migration process.
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">View Assets</a>
+</div>
+
+<div class="section-stack">
+
+    <div class="table-card">
+        <div class="card-header">
+            <div>
+                <h2>High Urgency Assets</h2>
+                <p class="page-subtitle">Assets whose current urgency is classified as High.</p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Risk Score</th>
+                        <th>Urgency</th>
+                        <th>Migration Status</th>
+                        <th>Target Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for asset in urgent_assets %}
+                    <tr>
+                        <td><strong>{{ asset.asset_name }}</strong></td>
+                        <td><span class="badge badge-high">{{ asset.risk_score }}</span></td>
+                        <td><span class="badge badge-high">{{ asset.urgency }}</span></td>
+                        <td>
+                            {% if asset.migration_status == 'Classical' %}
+                                <span class="badge badge-classical">Classical</span>
+                            {% elif asset.migration_status == 'Hybrid' %}
+                                <span class="badge badge-hybrid">Hybrid</span>
+                            {% else %}
+                                <span class="badge badge-pqc">Post-Quantum</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ asset.target_date or 'Not Set' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="empty-state">No high urgency assets.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="table-card">
+        <div class="card-header">
+            <div>
+                <h2>Quantum-Vulnerable Cryptography</h2>
+                <p class="page-subtitle">
+                    Assets that still contain algorithms classified as vulnerable to the quantum threat.
+                </p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Algorithm</th>
+                        <th>Algorithm Type</th>
+                        <th>Risk Score</th>
+                        <th>Migration Status</th>
+                        <th>Target Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for asset in vulnerable_assets %}
+                    <tr>
+                        <td><strong>{{ asset.asset_name }}</strong></td>
+                        <td>{{ asset.algorithm_name }}</td>
+                        <td>{{ asset.algorithm_type }}</td>
+                        <td>
+                            {% if asset.risk_score >= 70 %}
+                                <span class="badge badge-high">{{ asset.risk_score }}</span>
+                            {% else %}
+                                <span class="badge badge-medium">{{ asset.risk_score }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if asset.migration_status == 'Classical' %}
+                                <span class="badge badge-classical">Classical</span>
+                            {% else %}
+                                <span class="badge badge-hybrid">Hybrid</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ asset.target_date or 'Not Set' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="empty-state">No vulnerable algorithms detected.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="table-card">
+        <div class="card-header">
+            <div>
+                <h2>Certificates Expiring Within 90 Days</h2>
+                <p class="page-subtitle">
+                    Certificate lifecycle events that can affect migration timing and operational urgency.
+                </p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Common Name</th>
+                        <th>Issuer</th>
+                        <th>Expiry Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for certificate in expiring_certificates %}
+                    <tr>
+                        <td><strong>{{ certificate.asset_name }}</strong></td>
+                        <td>{{ certificate.common_name }}</td>
+                        <td>{{ certificate.issuer }}</td>
+                        <td><span class="badge badge-medium">{{ certificate.expiry_date }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="empty-state">No certificates expire within 90 days.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

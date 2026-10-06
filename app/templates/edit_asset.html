@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - Edit Asset{% endblock %}
+
+{% block content %}
+
+{% set primary = current_algorithms[0] if current_algorithms|length > 0 else none %}
+{% set secondary = current_algorithms[1] if current_algorithms|length > 1 else none %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Edit Cryptographic Asset</h1>
+        <p class="page-subtitle">
+            Update asset metadata and recalculate Migration Status, Risk Score, Urgency and Recommendation.
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">Back to Assets</a>
+</div>
+
+<div class="notice notice-info">
+    <strong>Current Migration Status:</strong> {{ asset.migration_status }}
+</div>
+
+{% if error %}
+<div class="notice notice-warning">
+    {{ error }}
+</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST">
+
+        <div class="form-section">
+            <h2>Asset Details</h2>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="asset_name">Asset Name</label>
+                    <input id="asset_name" type="text" name="asset_name" value="{{ asset.asset_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="system_id">System</label>
+                    <select id="system_id" name="system_id" required>
+                        {% for system in systems %}
+                            <option value="{{ system.system_id }}"
+                                    {% if system.system_id == asset.system_id %}selected{% endif %}>
+                                {{ system.system_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="owner_id">Owner</label>
+                    <select id="owner_id" name="owner_id" required>
+                        {% for owner in owners %}
+                            <option value="{{ owner.owner_id }}"
+                                    {% if owner.owner_id == asset.owner_id %}selected{% endif %}>
+                                {{ owner.owner_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="asset_type">Asset Type</label>
+                    <input id="asset_type" type="text" name="asset_type" value="{{ asset.asset_type }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="protocol">Protocol</label>
+                    <input id="protocol" type="text" name="protocol" value="{{ asset.protocol }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input id="location" type="text" name="location" value="{{ asset.location }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="data_sensitivity">Data Sensitivity</label>
+                    <select id="data_sensitivity" name="data_sensitivity" required>
+                        {% for value in ['High', 'Medium', 'Low'] %}
+                            <option value="{{ value }}" {% if value == asset.data_sensitivity %}selected{% endif %}>
+                                {{ value }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exposure">Exposure</label>
+                    <select id="exposure" name="exposure" required>
+                        {% for value in ['Internet-Facing', 'Internal', 'Isolated'] %}
+                            <option value="{{ value }}" {% if value == asset.exposure %}selected{% endif %}>
+                                {{ value }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label for="target_date">Target Migration Date</label>
+                    <input id="target_date" type="date" name="target_date" value="{{ asset.target_date or '' }}">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Primary Algorithm</h2>
+
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label for="primary_algorithm_id">Algorithm</label>
+                    <select id="primary_algorithm_id" name="primary_algorithm_id" required>
+                        {% for algorithm in algorithms %}
+                            <option value="{{ algorithm.algorithm_id }}"
+                                    {% if primary and algorithm.algorithm_id == primary.algorithm_id %}selected{% endif %}>
+                                {{ algorithm.algorithm_name }} - {{ algorithm.quantum_status }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="primary_usage_type">Usage Type</label>
+                    <input id="primary_usage_type" type="text" name="primary_usage_type"
+                           value="{{ primary.usage_type if primary else '' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="primary_key_size">Key Size / Parameter</label>
+                    <input id="primary_key_size" type="text" name="primary_key_size"
+                           value="{{ primary.key_size if primary else '' }}" required>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Secondary Algorithm <span class="text-muted">· Optional</span></h2>
+            <p class="text-muted">Use a second algorithm when the asset operates in a Hybrid configuration.</p>
+
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label for="secondary_algorithm_id">Secondary Algorithm</label>
+                    <select id="secondary_algorithm_id" name="secondary_algorithm_id">
+                        <option value="">None</option>
+                        {% for algorithm in algorithms %}
+                            <option value="{{ algorithm.algorithm_id }}"
+                                    {% if secondary and algorithm.algorithm_id == secondary.algorithm_id %}selected{% endif %}>
+                                {{ algorithm.algorithm_name }} - {{ algorithm.quantum_status }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="secondary_usage_type">Secondary Usage Type</label>
+                    <input id="secondary_usage_type" type="text" name="secondary_usage_type"
+                           value="{{ secondary.usage_type if secondary else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="secondary_key_size">Secondary Key Size / Parameter</label>
+                    <input id="secondary_key_size" type="text" name="secondary_key_size"
+                           value="{{ secondary.key_size if secondary else '' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update Asset and Recalculate Risk</button>
+            <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

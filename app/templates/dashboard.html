@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block title %}
+QuantumReady Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1 class="page-title">
+            QuantumReady Dashboard
+        </h1>
+
+        <p class="page-subtitle">
+            Cryptographic risk overview and post-quantum migration readiness.
+        </p>
+    </div>
+
+    <div class="actions">
+
+        <a href="{{ url_for('main.export_report') }}"
+           class="btn btn-secondary">
+            Export Risk Report
+        </a>
+
+        <a href="{{ url_for('main.add_asset') }}"
+           class="btn btn-primary">
+            Add Asset
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     KPI Overview
+     ===================================================== -->
+
+<div class="metric-grid">
+
+    <div class="metric-card">
+        <div class="metric-label">
+            Total Assets
+        </div>
+
+        <div class="metric-value">
+            {{ total_assets }}
+        </div>
+
+        <div class="metric-note">
+            Assets currently tracked
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            High Risk
+        </div>
+
+        <div class="metric-value text-danger">
+            {{ high_risk }}
+        </div>
+
+        <div class="metric-note">
+            Risk Score ≥ 70
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            High Urgency
+        </div>
+
+        <div class="metric-value text-danger">
+            {{ high_urgency }}
+        </div>
+
+        <div class="metric-note">
+            Requires prioritized action
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            Average Risk Score
+        </div>
+
+        <div class="metric-value">
+            {{ average_risk }}
+        </div>
+
+        <div class="metric-note">
+            Across all cryptographic assets
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            Classical
+        </div>
+
+        <div class="metric-value">
+            {{ classical_assets }}
+        </div>
+
+        <div class="metric-note">
+            Quantum-vulnerable migration state
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            Hybrid
+        </div>
+
+        <div class="metric-value">
+            {{ hybrid_assets }}
+        </div>
+
+        <div class="metric-note">
+            Classical + PQC configuration
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            Post-Quantum
+        </div>
+
+        <div class="metric-value text-success">
+            {{ pqc_assets }}
+        </div>
+
+        <div class="metric-note">
+            PQC-only cryptographic posture
+        </div>
+    </div>
+
+
+    <div class="metric-card">
+        <div class="metric-label">
+            Certificates Expiring
+        </div>
+
+        <div class="metric-value">
+            {{ expiring_certificates }}
+        </div>
+
+        <div class="metric-note">
+            Within the next 90 days
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     Priority Assets
+     ===================================================== -->
+
+<div class="table-card">
+
+    <div class="card-header">
+
+        <div>
+            <h2>
+                Top Priority Assets
+            </h2>
+
+            <p class="page-subtitle">
+                Assets requiring the highest level of attention based on the current Risk Score.
+            </p>
+        </div>
+
+        <a href="{{ url_for('main.assets') }}"
+           class="btn btn-secondary">
+            View All Assets
+        </a>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Asset</th>
+                    <th>Risk Score</th>
+                    <th>Urgency</th>
+                    <th>Migration Status</th>
+                    <th>Target Date</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for asset in priority_assets %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ asset.asset_name }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+
+                        {% if asset.risk_score >= 70 %}
+
+                            <span class="badge badge-high">
+                                {{ asset.risk_score }}
+                            </span>
+
+                        {% elif asset.risk_score >= 40 %}
+
+                            <span class="badge badge-medium">
+                                {{ asset.risk_score }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-low">
+                                {{ asset.risk_score }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if asset.urgency == 'High' %}
+
+                            <span class="badge badge-high">
+                                High
+                            </span>
+
+                        {% elif asset.urgency == 'Medium' %}
+
+                            <span class="badge badge-medium">
+                                Medium
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-low">
+                                Low
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if asset.migration_status == 'Classical' %}
+
+                            <span class="badge badge-classical">
+                                Classical
+                            </span>
+
+                        {% elif asset.migration_status == 'Hybrid' %}
+
+                            <span class="badge badge-hybrid">
+                                Hybrid
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-pqc">
+                                Post-Quantum
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if asset.target_date %}
+
+                            {{ asset.target_date }}
+
+                        {% else %}
+
+                            <span class="text-muted">
+                                Not Set
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     Quick Actions
+     ===================================================== -->
+
+<div style="margin-top: 24px;">
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <h2>
+                Quick Actions
+            </h2>
+
+            <p class="text-muted">
+                Manage cryptographic inventory, review alerts or refresh organizational data.
+            </p>
+
+            <div class="actions">
+
+                <a href="{{ url_for('main.assets') }}"
+                   class="btn btn-secondary">
+                    Crypto Assets
+                </a>
+
+                <a href="{{ url_for('main.alerts') }}"
+                   class="btn btn-secondary">
+                    Review Alerts
+                </a>
+
+                <a href="{{ url_for('main.import_data') }}"
+                   class="btn btn-secondary">
+                    Import Data
+                </a>
+
+                <a href="{{ url_for('main.sources') }}"
+                   class="btn btn-secondary">
+                    Data Sources
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - Cryptographic Assets{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Cryptographic Assets</h1>
+        <p class="page-subtitle">
+            Prioritized assets based on cryptographic posture, business criticality,
+            data sensitivity and exposure.
+        </p>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('main.export_report') }}" class="btn btn-secondary">Export Risk Report</a>
+        <a href="{{ url_for('main.add_asset') }}" class="btn btn-primary">Add Asset</a>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="card-header">
+        <div>
+            <h2>Asset Inventory</h2>
+            <p class="page-subtitle">Risk is recalculated from the current asset and algorithm metadata.</p>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="assets-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Asset</th>
+                    <th>System / Owner</th>
+                    <th>Input</th>
+                    <th>Migration</th>
+                    <th>Target Date</th>
+                    <th>Risk</th>
+                    <th>Level</th>
+                    <th>Urgency</th>
+                    <th>Explainability</th>
+                    <th>Recommendation</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for asset in assets %}
+                <tr>
+                    <td>{{ asset.asset_id }}</td>
+
+                    <td>
+                        <strong class="asset-name">{{ asset.asset_name }}</strong>
+                        <div class="cell-subtext">{{ asset.asset_type }} · {{ asset.protocol }}</div>
+                    </td>
+
+                    <td>
+                        <strong>{{ asset.system_name }}</strong>
+                        <div class="cell-subtext">{{ asset.owner_name }}</div>
+                    </td>
+
+                    <td>
+                        <span class="badge badge-info">{{ asset.input_method }}</span>
+                        <div class="cell-subtext cell-wrap">{{ asset.data_sources }}</div>
+                    </td>
+
+                    <td>
+                        {% if asset.migration_status == 'Classical' %}
+                            <span class="badge badge-classical">Classical</span>
+                        {% elif asset.migration_status == 'Hybrid' %}
+                            <span class="badge badge-hybrid">Hybrid</span>
+                        {% else %}
+                            <span class="badge badge-pqc">Post-Quantum</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if asset.target_date %}
+                            {{ asset.target_date }}
+                        {% else %}
+                            <span class="text-muted">Not Set</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if asset.risk_score >= 70 %}
+                            <span class="badge badge-high">{{ asset.risk_score }}</span>
+                        {% elif asset.risk_score >= 40 %}
+                            <span class="badge badge-medium">{{ asset.risk_score }}</span>
+                        {% else %}
+                            <span class="badge badge-low">{{ asset.risk_score }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if asset.risk_level == 'High' %}
+                            <span class="badge badge-high">High</span>
+                        {% elif asset.risk_level == 'Medium' %}
+                            <span class="badge badge-medium">Medium</span>
+                        {% else %}
+                            <span class="badge badge-low">Low</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if asset.urgency == 'High' %}
+                            <span class="badge badge-high">High</span>
+                        {% elif asset.urgency == 'Medium' %}
+                            <span class="badge badge-medium">Medium</span>
+                        {% else %}
+                            <span class="badge badge-low">Low</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="details-cell">
+                        <details>
+                            <summary>Why this score?</summary>
+                            <ul class="score-list">
+                                {% for reason in asset.risk_reasons %}
+                                    <li>{{ reason }}</li>
+                                {% endfor %}
+                            </ul>
+                        </details>
+                    </td>
+
+                    <td class="details-cell">
+                        <details>
+                            <summary>View recommendation</summary>
+                            <p class="recommendation-text">{{ asset.recommendation }}</p>
+                        </details>
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for('main.edit_asset', asset_id=asset.asset_id) }}"
+                           class="btn btn-secondary btn-small">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

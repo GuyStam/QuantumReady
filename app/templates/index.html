@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">QuantumReady</h1>
+        <p class="page-subtitle">
+            Post-Quantum Migration Decision Support System
+        </p>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+            Open Dashboard
+        </a>
+        <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">
+            View Assets
+        </a>
+    </div>
+</div>
+
+<div class="hero-card mb-24">
+    <div class="hero-copy">
+        <div class="eyebrow">CRYPTOGRAPHIC READINESS</div>
+        <h2>Map today. Prioritize the transition to post-quantum cryptography.</h2>
+        <p>
+            QuantumReady consolidates cryptographic asset metadata, evaluates
+            quantum-related risk and explains which assets should be prioritized
+            for PQC migration and why.
+        </p>
+
+        <div class="actions">
+            <a href="{{ url_for('main.add_asset') }}" class="btn btn-primary">
+                Add Cryptographic Asset
+            </a>
+            <a href="{{ url_for('main.import_data') }}" class="btn btn-secondary">
+                Import Organizational Data
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-stat">
+        <div class="hero-stat-label">Decision Support</div>
+        <div class="hero-stat-value">Risk → Urgency → Action</div>
+        <div class="hero-stat-note">
+            Transparent prioritization based on cryptography, sensitivity,
+            business criticality and exposure.
+        </div>
+    </div>
+</div>
+
+<div class="section-heading">
+    <div>
+        <h2>Core Workflow</h2>
+        <p class="page-subtitle">From organizational metadata to an explainable migration priority.</p>
+    </div>
+</div>
+
+<div class="source-grid mb-24">
+    <div class="source-card">
+        <div class="source-number">01</div>
+        <h3>Inventory</h3>
+        <p>Collect system, cryptographic and certificate metadata from organizational sources.</p>
+    </div>
+
+    <div class="source-card">
+        <div class="source-number">02</div>
+        <h3>Assess</h3>
+        <p>Calculate Risk Score and Urgency using transparent prototype rules.</p>
+    </div>
+
+    <div class="source-card">
+        <div class="source-number">03</div>
+        <h3>Prioritize</h3>
+        <p>Identify high-priority classical and hybrid assets that require migration planning.</p>
+    </div>
+
+    <div class="source-card">
+        <div class="source-number">04</div>
+        <h3>Track</h3>
+        <p>Monitor migration status, target dates, recommendations and certificate alerts.</p>
+    </div>
+</div>
+
+<div class="card mb-24">
+    <div class="card-body">
+        <h2>Prototype Scope</h2>
+        <p>
+            QuantumReady is an academic decision-support prototype for a Cloudflare
+            enterprise scenario. It uses synthetic demonstration data and stores metadata only.
+            It does not access Cloudflare internal systems, store private keys or perform
+            cryptographic migration automatically.
+        </p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body compact-row">
+        <div>
+            <h3 class="mb-0">Dynamic Flask Route</h3>
+            <p class="page-subtitle">Jinja2 renders the user name supplied in the URL.</p>
+        </div>
+
+        <a href="{{ url_for('main.user', name='Guy') }}" class="btn btn-secondary">
+            Open /user/Guy
+        </a>
+    </div>
+</div>
+
+{% endblock %}

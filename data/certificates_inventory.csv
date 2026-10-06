@@ -1,0 +1,7 @@
+﻿certificate_id,asset_id,common_name,issuer,serial_number,valid_from,expiry_date
+201,101,edge-api.quantumready.demo,Demo Edge CA,QR-EDGE-0001,2026-05-15,2027-05-15
+202,102,customer-api.quantumready.demo,Demo Public CA,QR-API-0002,2025-12-20,2026-12-20
+203,103,admin.quantumready.demo,Demo Internal CA,QR-ADM-0003,2026-09-01,2027-09-01
+204,104,origin-mtls.quantumready.demo,Demo Internal CA,QR-MTLS-0004,2025-10-20,2026-10-20
+205,105,signing.quantumready.demo,Demo Signing CA,QR-SIGN-0005,2026-01-10,2027-01-10
+206,108,pqc-pilot.quantumready.demo,Demo PQC CA,QR-PQC-0006,2026-07-31,2027-01-31

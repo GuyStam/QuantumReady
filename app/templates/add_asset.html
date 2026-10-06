@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - Add Asset{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Add Cryptographic Asset</h1>
+        <p class="page-subtitle">
+            Add a single asset manually. Migration Status, Risk Score, Urgency and Recommendation are calculated automatically.
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">Back to Assets</a>
+</div>
+
+<div class="notice notice-info">
+    <strong>Automatic classification:</strong>
+    Classical, Hybrid or Post-Quantum is determined from the selected algorithm combination.
+</div>
+
+{% if error %}
+<div class="notice notice-warning">
+    {{ error }}
+</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST">
+
+        <div class="form-section">
+            <h2>Asset Details</h2>
+            <p class="text-muted">Business and technical context used by the prioritization model.</p>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="asset_name">Asset Name</label>
+                    <input id="asset_name" type="text" name="asset_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="system_id">System</label>
+                    <select id="system_id" name="system_id" required>
+                        {% for system in systems %}
+                            <option value="{{ system.system_id }}">{{ system.system_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="owner_id">Owner</label>
+                    <select id="owner_id" name="owner_id" required>
+                        {% for owner in owners %}
+                            <option value="{{ owner.owner_id }}">{{ owner.owner_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="asset_type">Asset Type</label>
+                    <select id="asset_type" name="asset_type" required>
+                        <option value="TLS Endpoint">TLS Endpoint</option>
+                        <option value="Signing Key">Signing Key</option>
+                        <option value="Encryption Key">Encryption Key</option>
+                        <option value="API">API</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="protocol">Protocol</label>
+                    <select id="protocol" name="protocol" required>
+                        <option value="TLS 1.3">TLS 1.3</option>
+                        <option value="TLS 1.2">TLS 1.2</option>
+                        <option value="mTLS">mTLS</option>
+                        <option value="N/A">N/A</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input id="location" type="text" name="location" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="data_sensitivity">Data Sensitivity</label>
+                    <select id="data_sensitivity" name="data_sensitivity" required>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exposure">Exposure</label>
+                    <select id="exposure" name="exposure" required>
+                        <option value="Internet-Facing">Internet-Facing</option>
+                        <option value="Internal">Internal</option>
+                        <option value="Isolated">Isolated</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label for="target_date">Target Migration Date</label>
+                    <input id="target_date" type="date" name="target_date">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Primary Algorithm</h2>
+            <p class="text-muted">The main algorithm currently used by the asset.</p>
+
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label for="primary_algorithm_id">Algorithm</label>
+                    <select id="primary_algorithm_id" name="primary_algorithm_id" required>
+                        {% for algorithm in algorithms %}
+                            <option value="{{ algorithm.algorithm_id }}">
+                                {{ algorithm.algorithm_name }} - {{ algorithm.quantum_status }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="primary_usage_type">Usage Type</label>
+                    <select id="primary_usage_type" name="primary_usage_type" required>
+                        <option value="Key Exchange">Key Exchange</option>
+                        <option value="Certificate / Signature">Certificate / Signature</option>
+                        <option value="Data Encryption">Data Encryption</option>
+                        <option value="Digital Signature">Digital Signature</option>
+                        <option value="Key Wrapping">Key Wrapping</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="primary_key_size">Key Size / Parameter</label>
+                    <input id="primary_key_size" type="text" name="primary_key_size"
+                           placeholder="Example: 2048 or ML-KEM-768" required>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Secondary Algorithm <span class="text-muted">· Optional</span></h2>
+            <p class="text-muted">
+                Select a second algorithm when the asset combines classical and post-quantum cryptography in a Hybrid configuration.
+            </p>
+
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label for="secondary_algorithm_id">Secondary Algorithm</label>
+                    <select id="secondary_algorithm_id" name="secondary_algorithm_id">
+                        <option value="">None</option>
+                        {% for algorithm in algorithms %}
+                            <option value="{{ algorithm.algorithm_id }}">
+                                {{ algorithm.algorithm_name }} - {{ algorithm.quantum_status }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="secondary_usage_type">Secondary Usage Type</label>
+                    <select id="secondary_usage_type" name="secondary_usage_type">
+                        <option value="">None</option>
+                        <option value="Key Exchange">Key Exchange</option>
+                        <option value="Certificate / Signature">Certificate / Signature</option>
+                        <option value="Data Encryption">Data Encryption</option>
+                        <option value="Digital Signature">Digital Signature</option>
+                        <option value="Key Wrapping">Key Wrapping</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="secondary_key_size">Secondary Key Size / Parameter</label>
+                    <input id="secondary_key_size" type="text" name="secondary_key_size"
+                           placeholder="Example: ML-KEM-768">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add Asset and Calculate Risk</button>
+            <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

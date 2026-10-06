@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}QuantumReady{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">Q</div>
+
+            <div>
+                <div class="brand-name">QuantumReady</div>
+                <div class="brand-subtitle">PQC Readiness Platform</div>
+            </div>
+        </div>
+
+        <div class="nav-label">OVERVIEW</div>
+
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('main.index') }}"
+               class="nav-link {% if request.path == '/' %}active{% endif %}">
+                Home
+            </a>
+
+            <a href="{{ url_for('main.dashboard') }}"
+               class="nav-link {% if request.path == '/dashboard' %}active{% endif %}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('main.assets') }}"
+               class="nav-link {% if request.path.startswith('/assets') or request.path.startswith('/edit-asset') %}active{% endif %}">
+                Crypto Assets
+            </a>
+
+            <a href="{{ url_for('main.alerts') }}"
+               class="nav-link {% if request.path == '/alerts' %}active{% endif %}">
+                Alerts
+            </a>
+        </nav>
+
+        <div class="nav-label">MANAGEMENT</div>
+
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('main.add_asset') }}"
+               class="nav-link {% if request.path == '/add-asset' %}active{% endif %}">
+                Add Asset
+            </a>
+
+            <a href="{{ url_for('main.import_data') }}"
+               class="nav-link {% if request.path == '/import' %}active{% endif %}">
+                Import Data
+            </a>
+
+            <a href="{{ url_for('main.sources') }}"
+               class="nav-link {% if request.path == '/sources' %}active{% endif %}">
+                Data Sources
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <span class="status-dot"></span>
+            Prototype Environment
+        </div>
+    </aside>
+
+
+    <main class="main-area">
+        <header class="topbar">
+            <div class="topbar-system">
+                Post-Quantum Migration Decision Support
+            </div>
+
+            <div class="prototype-badge">POC</div>
+        </header>
+
+        <section class="page-content">
+            {% block content %}{% endblock %}
+        </section>
+
+        <footer class="app-footer">
+            QuantumReady · Cryptographic Asset Mapping & PQC Prioritization
+        </footer>
+    </main>
+
+</div>
+</body>
+</html>

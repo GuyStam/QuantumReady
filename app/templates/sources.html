@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}QuantumReady - Data Sources{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Data Sources</h1>
+        <p class="page-subtitle">
+            Simulated organizational exports used by the QuantumReady prototype.
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.import_data') }}" class="btn btn-primary">Import Source Files</a>
+</div>
+
+<div class="notice notice-info">
+    QuantumReady models an enterprise scenario for Cloudflare using synthetic demonstration metadata.
+    The prototype does not connect to Cloudflare internal systems.
+</div>
+
+<div class="source-grid mb-24">
+    <div class="source-card">
+        <div class="source-number">01</div>
+        <h3>IT / CMDB Inventory</h3>
+        <div class="code-chip">systems_inventory.csv</div>
+        <p>Systems, environment, business criticality and ownership information.</p>
+    </div>
+
+    <div class="source-card">
+        <div class="source-number">02</div>
+        <h3>Cryptographic Inventory</h3>
+        <div class="code-chip">crypto_inventory.csv</div>
+        <p>Cryptographic assets, algorithms, protocols, key sizes, exposure and migration status.</p>
+    </div>
+
+    <div class="source-card">
+        <div class="source-number">03</div>
+        <h3>PKI / Certificate Management</h3>
+        <div class="code-chip">certificates_inventory.csv</div>
+        <p>Certificate issuer, serial number, validity and expiration information.</p>
+    </div>
+</div>
+
+<div class="card mb-24">
+    <div class="card-header">
+        <h2>Data Processing Flow</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="flow-grid">
+            <div class="flow-step">
+                <div class="flow-number">1</div>
+                <strong>Export Metadata</strong>
+                <span>Source systems provide three CSV exports.</span>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">2</div>
+                <strong>Validate & Consolidate</strong>
+                <span>prepare_inventory.py validates and combines the source data.</span>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">3</div>
+                <strong>Store</strong>
+                <span>The consolidated inventory is stored in SQLite.</span>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">4</div>
+                <strong>Assess Risk</strong>
+                <span>risk_engine.py calculates Risk Score, Urgency and Recommendation.</span>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">5</div>
+                <strong>Prioritize</strong>
+                <span>The dashboard and alerts surface the assets that require attention.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h2>Data Handling</h2>
+        <p>
+            QuantumReady stores metadata only. It does not store private keys, passwords or customer content.
+        </p>
+
+        <div class="inline-meta">
+            <div>
+                <strong>Organizational Import</strong>
+                <span>Asset received through the simulated organizational export process.</span>
+            </div>
+            <div>
+                <strong>Manual Entry</strong>
+                <span>Asset added directly by a user through the QuantumReady application.</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('main.add_asset') }}" class="btn btn-secondary">Add Asset Manually</a>
+            <a href="{{ url_for('main.assets') }}" class="btn btn-secondary">View Assets</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
