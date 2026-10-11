@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     debug = os.environ.get(
         'QUANTUMREADY_DEBUG',
-        'true'
+        'false'
     ).lower() == 'true'
 
     app.run(
